@@ -1,0 +1,7 @@
+---
+# vars file for ansible-factorio
+factorio_user: factorio
+factorio_group: factorio
+
+factorio_install_location: /opt
+factorio_save_name: factory

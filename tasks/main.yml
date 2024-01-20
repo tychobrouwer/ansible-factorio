@@ -1,0 +1,62 @@
+---
+# tasks file for ansible-factorio
+- name: Update cache
+  ansible.builtin.apt:
+    update_cache: true
+    cache_valid_time: 3600
+
+- name: Ensure xz utils is installed
+  ansible.builtin.package:
+    name:
+      - xz-utils
+    state: present
+
+- name: Ensure factorio group exists
+  ansible.builtin.group:
+    name: "{{ factorio_group }}"
+    state: present
+
+- name: Ensure factorio user exists
+  ansible.builtin.user:
+    name: "{{ factorio_name }}"
+    group: "{{ factorio_group }}"
+    shell: /usr/sbin/nologin
+    create_home: false
+    state: present
+
+- name: Get and unarchive factorio headless server files if not present
+  ansible.builtin.unarchive:
+    src: https://factorio.com/get-download/stable/headless/linux64
+    dest: "{{ factorio_install_location }}"
+    owner: "{{ factorio_name }}"
+    group: "{{ factorio_group }}"
+    remote_src: true
+  notify: Restart factorio
+
+- name: Ensure factorio script is executable
+  ansible.builtin.file:
+    path: "{{ factorio_install_location }}/factorio/bin/x64/factorio"
+    mode: "0755"
+    owner: "{{ factorio_name }}"
+    group: "{{ factorio_group }}"
+
+- name: Ensure factorio service file is on remote
+  ansible.builtin.copy:
+    src: factorio.service
+    dest: /etc/systemd/system/factorio.service
+    mode: "0664"
+    owner: root
+    group: root
+
+- name: Ensure factorio service is enabled and started
+  ansible.builtin.service:
+    name: factorio
+    state: started
+    enabled: true
+
+- name: Ensure factorio file permissions are correct
+  ansible.builtin.file:
+    path: "{{ factorio_install_location }}/factorio"
+    owner: "{{ user_name }}"
+    group: "{{ group_name }}"
+    recurse: true

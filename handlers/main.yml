@@ -1,0 +1,6 @@
+---
+# handlers file for ansible-factorio
+- name: Restart factorio
+  ansible.builtin.service:
+    name: factorio
+    state: restarted

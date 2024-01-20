@@ -1,0 +1,14 @@
+[Unit]
+After=network.target
+
+[Service]
+Type=simple
+User={{ factorio_user }}
+Group={{ factorio_group }}
+ExecStart=/opt/factorio/bin/x64/factorio --start-server /opt/factorio/{{ factorio_save_name }}.zip --bind 192.168.1.112 > output.log
+TimeoutStartSec=0
+RemainAfterExit=yes
+
+
+[Install]
+WantedBy=default.target
