@@ -16,11 +16,15 @@ Example Playbook
 ----------------
 
 ```yaml
-    - hosts: servers
-      roles:
-         - { role: tychobrouwer.factorio, factorio_save_name: factory }
-         - { role: tychobrouwer.factorio, factorio_save_name: factory, factorio_install_location: /opt,
-             factorio_user: factorio, factorio_group: factorio }
+- hosts: servers
+  roles:
+    - role: tychobrouwer.factorio
+      
+    - role: tychobrouwer.factorio
+      factorio_save_name: factory
+      factorio_install_location: /opt
+      factorio_user: factorio
+      factorio_group: factorio
 ```
 
 License
